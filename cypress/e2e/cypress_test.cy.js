@@ -5,6 +5,7 @@ describe('Cypress', () => {
             cy.visit(data.main_url);
         })
     })
+
     it('Employer login + create vacancy', () => {
         cy.fixture('cypressTest').then(data => {
             cy.visit(data.main_url + '/login');
@@ -58,9 +59,6 @@ describe('Cypress', () => {
 
             cy.get(':nth-child(1) > .vacancy-item__info-wrapper > .vacancy-item__footer-wrapper > .vacancy-footer > .vacancy-footer__button-wrapper > .button__background-color-green')
                 .click({ force: true })
-
-            cy.get('[data-v-7ff322b7=""][data-v-f5840952=""] > .button')
-                .click()
         })
     })
 
@@ -96,7 +94,7 @@ describe('Cypress', () => {
         })
     })
 
-    it('Confirmation of response by the employer\n', () => {
+    it('Confirmation of response by the employer', () => {
         cy.fixture('cypressTest').then(data => {
             cy.visit(data.main_url + '/login');
             cy.get('.form-input--text')
@@ -129,12 +127,59 @@ describe('Cypress', () => {
             .click({ force: true })
 
             cy.wait(1000);
+        })
+    })
 
-            cy.get('[data-v-7ff322b7=""][data-v-f5840952=""] > .button')
-                .click({ force: true })
+    it('Negative entry scenario', () => {
+        cy.fixture('cypressTest').then(data => {
+            cy.visit(data.main_url + '/login');
+            cy.get('.form-input--text')
+                .type(data.login_employer)
+
+            cy.get('.form-input--password')
+                .type('1')
+
+            cy.get(':nth-child(3) > .button')
+                .click()
+
+            cy.wait(1000);
+
+            cy.get('.form-error > span')
+                .should('be.visible')
 
             cy.wait(1000);
         })
     })
 
+    it('Negative scenario employer login + create vacancy', () => {
+        cy.fixture('cypressTest').then(data => {
+            cy.visit(data.main_url + '/login');
+            cy.get('.form-input--text')
+                .type(data.login_employer)
+
+            cy.get('.form-input--password')
+                .type(data.all_password)
+
+            cy.get(':nth-child(3) > .button')
+                .click()
+
+            cy.wait(1000);
+
+            cy.get(':nth-child(7) > .menu-item__item-name')
+                .click()
+
+            cy.wait(1000);
+
+            cy.get('[data-v-94414c9f=""][data-v-4849dea2=""] > .vacancies-block > .vacancies-block__filters-wrapper > .button')
+                .click()
+
+            cy.wait(1000);
+
+            cy.get('.vacancy-add-form-wrapper > .form > :nth-child(1) > .form__labels > .labels > :nth-child(1) > .form-control--responsive > .form-input--')
+                .type('././//,./?>~`!@~!@##~!@3dcапвап', { force: true })
+
+            cy.get('.form-error > span')
+                .should('be.visible')
+        })
+    })
 })
